@@ -31,7 +31,13 @@ contract MoonToken is ERC20, Ownable, ERC1155Holder {
         }
     }
 
-    constructor() ERC20("MoonToken", "MOON") {}
+    constructor(address _nftAddress) ERC20("MoonToken", "MOON") {
+        nft = IERC1155(_nftAddress);
+    }
+
+    function stakeNFT(uint256 tokenId, uint256 amount) external {
+        nft.safeTransferFrom(msg.sender, address(this), tokenId, amount, "0");
+    }
 
     function mintToken(address sendTo, uint256 amountToSend) public onlyOwner {
         _mint(sendTo, amountToSend * 10 ** 18);
