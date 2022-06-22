@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 
-contract MoonToken is ERC20, Ownable, ERC1155Holder {
+contract StakeNFT is ERC20, Ownable, ERC1155Holder {
     IERC1155 public nft;
 
     struct stakeInfo{
@@ -35,8 +35,10 @@ contract MoonToken is ERC20, Ownable, ERC1155Holder {
         nft = IERC1155(_nftAddress);
     }
 
-    function stakeNFT(uint256 tokenId, uint256 amount) external {
+    function stake(uint256 tokenId, uint256 amount) external {
+        require(nft.balanceOf(msg.sender, tokenId) >= amount, "You don't have enough balance to stake");
         nft.safeTransferFrom(msg.sender, address(this), tokenId, amount, "0");
+        stakeInfos[tokenId] = stakeInfo(block.timestamp, amount, msg.sender);
     }
 
     function mintToken(address sendTo, uint256 amountToSend) public onlyOwner {
