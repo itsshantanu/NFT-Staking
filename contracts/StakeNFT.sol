@@ -41,6 +41,11 @@ contract StakeNFT is ERC20, Ownable, ERC1155Holder {
         stakeInfos[tokenId] = stakeInfo(block.timestamp, amount, msg.sender);
     }
 
+    function calculateTokens(uint256 tokenId, uint256 amount) public view returns (uint256){
+        uint256 stakedTime = block.timestamp - stakeInfos[tokenId].tokenStakedAt;
+        return getAPR(tokenId) * stakedTime * amount * 10 ** 18 /  (30 days * 12 * 100) ;
+    } 
+
     function mintToken(address sendTo, uint256 amountToSend) public onlyOwner {
         _mint(sendTo, amountToSend * 10 ** 18);
     }
