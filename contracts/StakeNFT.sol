@@ -46,8 +46,11 @@ contract StakeNFT is ERC20, Ownable, ERC1155Holder {
         return getAPR(tokenId) * stakedTime * amount * 10 ** 18 /  (30 days * 12 * 100) ;
     } 
 
-    function mintToken(address sendTo, uint256 amountToSend) public onlyOwner {
-        _mint(sendTo, amountToSend * 10 ** 18);
+    function unstake(uint256 tokenId, uint256 amount) external {
+        require(stakeInfos[tokenId].tokenOwner == msg.sender, "You can't unstake as you are not a owner");
+        stakeInfos[tokenId].stakeAmount -= amount;
+        _mint(msg.sender, calculateTokens(tokenId, amount));
+        nft.safeTransferFrom(address(this), msg.sender, tokenId, amount, "0");
     }
 
     function burnToken(uint amount) external {
