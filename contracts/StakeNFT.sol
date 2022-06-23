@@ -38,12 +38,15 @@ contract StakeNFT is ERC20, Ownable, ERC1155Holder {
         nft = IERC1155(_nftAddress);
     }
 
+    event staked( address owner, uint256 tokenId, uint256 amount, uint256 stakingTime); 
+
     // This function will stake the NFT by taking tokeId and amount as parameters.
 
     function stake(uint256 tokenId, uint256 amount) external {
         require(nft.balanceOf(msg.sender, tokenId) >= amount, "You don't have enough balance to stake");
         nft.safeTransferFrom(msg.sender, address(this), tokenId, amount, "0x00");
         stakeInfos[tokenId] = stakeInfo(block.timestamp, amount, msg.sender, true);
+        emit staked (msg.sender, tokenId, amount, block.timestamp);
     }
 
     // This function will calculate the amount of token that will be awarded if NFT is unstaked at any moment of time.
@@ -55,14 +58,18 @@ contract StakeNFT is ERC20, Ownable, ERC1155Holder {
         return getAPR(tokenId) * stakedTime * amount * 10 ** 18 /  (30 days * 12 * 100) ;
     } 
 
+    event unstaked(address owner, uint256 tokenId, uint256 amount, uint256 stakedTime, uint256 rewardedTokens);
+
     // This function will mint the calculated amount of ERC20 MoonToken to stakers account and also unstake the nft and transfer it to stakers account. 
 
     function unstake(uint256 tokenId, uint256 amount) external {
         require(stakeInfos[tokenId].tokenOwner == msg.sender, "You can't unstake as you are not a owner");
         stakeInfos[tokenId].stakeAmount -= amount;
-        _mint(msg.sender, calculateTokens(tokenId, amount));
+        uint256 rewardedTokens =  calculateTokens(tokenId, amount);
+        _mint(msg.sender, rewardedTokens);
         stakeInfos[tokenId].isNFTStaked = false;
         nft.safeTransferFrom(address(this), msg.sender, tokenId, amount, "0x00");
+        emit unstaked(msg.sender, tokenId, amount,  block.timestamp, rewardedTokens);
     }
 
     // This function will burn the amount of token sepcified by owner.
