@@ -2,11 +2,11 @@
 
 This smart contract stakes the minted NFT and rewards the staker in Custom ERC20 MoonTokens on the basis of time the NFT is staked for.
 
-For Example:- 
-    If NFT owner stakes NFT for:-
-    Atleast for 1 month they get 10% APR Reward in the form of MoonToken 
-    or atleast 6 months they get 15% APR Reward in the form of MoonToken
-    or 12 months or more they get 25% APR Reward in the form of MoonToken  
+For Example:-  
+    If NFT owner stakes NFT for:-  
+    Atleast for 1 month they get 10% APR Reward in the form of MoonToken  
+    or atleast 6 months they get 15% APR Reward in the form of MoonToken  
+    or 12 months or more they get 25% APR Reward in the form of MoonToken    
 
 
 ## Environment Variables
