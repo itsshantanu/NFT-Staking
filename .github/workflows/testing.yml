@@ -23,4 +23,4 @@ jobs:
       run: npm install -g hardhat
 
     - name: Tests
-      run: npx hardhat test
+      run: npm hardhat test
