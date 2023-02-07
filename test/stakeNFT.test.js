@@ -42,7 +42,7 @@ describe("Staking", () => {
     await stakeNft.connect(addr1).stake(1, 100);
     const stakeInfo = await stakeNft.stakeInfos(1);
     expect(stakeInfo.tokenOwner).to.equal(addr1.address);
-    expect(stakeInfo.stakeAmount).to.equal(10);
+    expect(stakeInfo.stakeAmount).to.equal(100);
   });
 
   it('Should not allow non-owner to unstake NFT', async () => {
